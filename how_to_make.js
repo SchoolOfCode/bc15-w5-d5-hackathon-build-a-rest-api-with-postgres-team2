@@ -1,146 +1,60 @@
-// Import the required modules
-import express from "express";
-import morgan from "morgan";
+// Import the 'pool' object so our helper functions can interact with the PostgreSQL database
+import { pool } from "./index.js";
 
-// Import author-related helper functions
-import {
-  getAuthors,
-  getAuthorById,
-  createAuthor,
-  updateAuthorById,
-  deleteAuthorById,
-} from "./authors.js";
+export async function getMethod() {
+  // Query the database and return all method
 
-// Import book-related helper functions
-import {
-  getBooks,
-  getBookById,
-  createBook,
-  updateBookById,
-  deleteBookById,
-} from "./books.js";
+  //Define the SQL query to fetch all method from the 'method' table
+  const queryText = "SELECT * FROM How_to_make";
 
-// Initialize the express app
-const app = express();
-// Retrieve the port number from environment variables
-const PORT = process.env.PORT;
+  // Use the pool object to send the query to the database
+  const result = await pool.query(queryText);
 
-// Middleware
-app.use(morgan("dev")); // Morgan is used for logging HTTP requests to the console in a developer-friendly format
-app.use(express.json()); // express.json() middleware is used to parse incoming JSON requests
+  // The rows property of the result object contains the retrieved records
+  return result.rows;
+}
 
-// Author Route Handlers
+export async function getMethodById(id) {
+  // Query the database and return the method with a matching id or null
 
-// Endpoint to retrieve all authors
-app.get("/authors/", async function (req, res) {
-  const authors = await getAuthors();
-  res.status(200).json({ status: "success", data: authors });
-});
+  // Define the SQL query to fetch the method with the specified id from the 'method' table
+  const queryText = "SELECT * FROM How_to_make WHERE id = $1";
 
-// Endpoint to retrieve a specific author by id
-app.get("/authors/:id", async function (req, res) {
-  const id = req.params.id;
-  const author = await getAuthorById(id);
-  // Assume 404 status if the author is not found
-  if (!author) {
-    return res
-      .status(404)
-      .json({ status: "fail", data: { msg: "Author not found" } });
-  }
-  res.status(200).json({ status: "success", data: author });
-});
+  //Use the pool object to send the query to the database
+  // passing the id as a parameter to prevent SQL injection
+  const result = await pool.query(queryText, [id]);
 
-// Endpoint to create a new author
-app.post("/authors/", async function (req, res) {
-  const data = req.body;
-  const author = await createAuthor(data);
-  res.status(201).json({ status: "success", data: author });
-});
+  // The rows property of the result object contains the retrieved records
+  // If a method with the specified id exists, it will be the first element in the rows array
+  // If no method exists with the specified id, the rows array will be empty
+  return result.rows[0] || null;
+}
 
-// Endpoint to update a specific author by id
-app.patch("/authors/:id", async function (req, res) {
-  const id = req.params.id;
-  const data = req.body;
-  const author = await updateAuthorById(id, data);
-  // Assume 404 status if the author is not found
-  if (!author) {
-    return res
-      .status(404)
-      .json({ status: "fail", data: { msg: "Author not found" } });
-  }
-  res.status(200).json({ status: "success", data: author });
-});
+export async function createMethod(method) {
+  // Query the database to create an method and return the newly created method
+  const queryText =
+    "INSERT INTO How_to_make(recipe_id, ingredients, method) VALUES ($1, $2, $3) RETURNING *";
+  // Creating array of variables from method object to pass in pool query
+  const values = [method.recipe_id, method.ingredients, method.method];
+  // Use the pool object along with the values array to complete the query
+  const result = await pool.query(queryText, values);
 
-// Endpoint to delete a specific author by id
-app.delete("/authors/:id", async function (req, res) {
-  const id = req.params.id;
-  const author = await deleteAuthorById(id);
-  // Assume 404 status if the author is not found
-  if (!author) {
-    return res
-      .status(404)
-      .json({ status: "fail", data: { msg: "Author not found" } });
-  }
-  res.status(200).json({ status: "success", data: author });
-});
+  //return the newly created method
+  return result.rows || null;
+}
 
-// Book Route Handlers
-
-// Endpoint to retrieve all books
-app.get("/books/", async function (req, res) {
-  const books = await getBooks();
-  res.status(200).json({ status: "success", data: books });
-});
-
-// Endpoint to retrieve a specific book by id
-app.get("/books/:id", async function (req, res) {
-  const id = req.params.id;
-  const book = await getBookById(id);
-  // Assume 404 status if the book is not found
-  if (!book) {
-    return res
-      .status(404)
-      .json({ status: "fail", data: { msg: "Book not found" } });
-  }
-  res.status(200).json({ status: "success", data: book });
-});
-
-// Endpoint to create a new book
-app.post("/books/", async function (req, res) {
-  const data = req.body;
-  const book = await createBook(data);
-  res.status(201).json({ status: "success", data: book });
-});
-
-// Endpoint to update a specific book by id
-app.patch("/books/:id", async function (req, res) {
-  const id = req.params.id;
-  const data = req.body;
-  const book = await updateBookById(id, data);
-  // Assume 404 status if the book is not found
-  if (!book) {
-    return res
-      .status(404)
-      .json({ status: "fail", data: { msg: "Book not found" } });
-  }
-
-  res.status(200).json({ status: "success", data: book });
-});
-
-// Endpoint to delete a specific book by id
-app.delete("/books/:id", async function (req, res) {
-  const id = req.params.id;
-  const book = await deleteBookById(id);
-  // Assume 404 status if the book is not found
-  if (!book) {
-    return res
-      .status(404)
-      .json({ status: "fail", data: { msg: "Book not found" } });
-  }
-  res.status(200).json({ status: "success", data: book });
-});
-
-// Start the server and listen on the specified port
-app.listen(PORT, function () {
-  console.log(`Server listening on port ${PORT}`);
-});
+export async function updateMethodById(id, updates) {
+  // Query the database to update an method and return the newly updated method or null
+  const queryText = "UPDATE How_to_make SET recipe_id =$1,ingredients = $2, method = $3 WHERE id = $4 RETURNING *";
+  const values = [updates.recipe_id, updates.ingredients, updates.method, id];
+  const result = await pool.query(queryText, values);
+  // return updated book
+  return result.rows || null;
+}
+  
+export async function deleteMethodById(id) {
+  // Query the database to delete an method and return the deleted method or null
+  const queryText = "DELETE FROM How_to_make Where id = $1 RETURNING *";
+  const result = await pool.query(queryText, [id]);
+  return result.rows[0] || null;
+}
