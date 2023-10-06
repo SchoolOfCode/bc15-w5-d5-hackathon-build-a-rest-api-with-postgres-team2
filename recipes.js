@@ -45,7 +45,7 @@ export async function createRecipe(recipe) {
 
 export async function updateRecipeById(id, updates) {
   // Query the database to update an recipe and return the newly updated recipe or null
-  const queryText = "UPDATE recipes SET recipe_name =$1,recipe_time = $2 WHERE id = $3 RETURNING *";
+  const queryText = "UPDATE recipes_table SET recipe_name =$1,recipe_time = $2 WHERE id = $3 RETURNING *";
   const values = [updates.recipe_name, updates.recipe_time, id];
   const result = await pool.query(queryText, values);
   // return updated book
@@ -54,7 +54,7 @@ export async function updateRecipeById(id, updates) {
   
 export async function deleteRecipeById(id) {
   // Query the database to delete an recipe and return the deleted recipe or null
-  const queryText = "DELETE FROM recipes Where id = $1 RETURNING *";
+  const queryText = "DELETE FROM recipes_table Where id = $1 RETURNING *";
   const result = await pool.query(queryText, [id]);
   return result.rows[0] || null;
 }
