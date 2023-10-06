@@ -14,7 +14,7 @@ export async function getRecipes() {
   return result.rows;
 }
 
-export async function getRecipesById(id) {
+export async function getRecipeById(id) {
   // Query the database and return the recipes with a matching id or null
 
   // Define the SQL query to fetch the recipes with the specified id from the 'recipe' table
