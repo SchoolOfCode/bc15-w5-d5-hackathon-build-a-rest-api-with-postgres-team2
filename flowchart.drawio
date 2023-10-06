@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="JPwOmys66IPJRtIeChqZ" name="SPRINT 1">
-        <mxGraphModel dx="1416" dy="644" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="507" dy="457" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -23,7 +23,7 @@
                 <mxCell id="3" value="Create first table&amp;nbsp;&amp;nbsp;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="25" y="110" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="5" value="Name : Recipies_table&lt;br&gt;1st coloumn : id (primary key)&lt;br&gt;2nd coloumn : Recipe_name&lt;br&gt;3rd coloumns : Time" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="5" value="Name : recipes_table&lt;br&gt;1st coloumn : id (primary key)&lt;br&gt;2nd coloumn : recipe_name&lt;br&gt;3rd coloumns :&lt;span style=&quot;color: rgb(209, 210, 211); font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; font-size: 15px; font-variant-ligatures: common-ligatures; text-align: left; background-color: rgb(34, 37, 41);&quot;&gt;recipe_t&lt;/span&gt;ime" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="180" y="110" width="170" height="70" as="geometry"/>
                 </mxCell>
                 <mxCell id="9" style="edgeStyle=none;html=1;" parent="1" source="8" edge="1">
